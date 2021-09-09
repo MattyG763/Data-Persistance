@@ -11,17 +11,20 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text highScoreText;
     public GameObject GameOverText;
-    
+
+    private PersistentData data = PersistentData.instance;
     private bool m_Started = false;
     private int m_Points;
-    
-    private bool m_GameOver = false;
 
     
     // Start is called before the first frame update
     void Start()
     {
+
+        highScoreText.text = "Highscore: " + data.highScoreName + ": " + data.highScore;
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -53,13 +56,6 @@ public class MainManager : MonoBehaviour
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
-        else if (m_GameOver)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-        }
     }
 
     void AddPoint(int point)
@@ -70,7 +66,23 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
-        m_GameOver = true;
+        if(data.highScore < m_Points)
+        {
+            data.highScore = m_Points;
+            data.SaveGame();
+        }
         GameOverText.SetActive(true);
+    }
+
+    public void RestartScene()
+    {
+        data.LoadGame();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Debug.Log("Reloading Scene");
+    }
+
+    public void GoToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }
