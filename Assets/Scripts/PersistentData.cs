@@ -10,6 +10,7 @@ public class PersistentData : MonoBehaviour
     public static PersistentData instance;
 
     private Text nameText;
+    public Text highScoreText;
 
     public string myName;
 
@@ -18,7 +19,7 @@ public class PersistentData : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (instance != null)
         {
             Destroy(gameObject);
         }
@@ -34,11 +35,13 @@ public class PersistentData : MonoBehaviour
     private void Start()
     {
         Text textComponent = GameObject.Find("EnterName").GetComponent<InputField>().textComponent;
+
         if (textComponent != null)
             nameText = textComponent;
         else
             return;
 
+        highScoreText.text = "Highscore: " + highScoreName + ": " + highScore;
 
     }
 
@@ -77,9 +80,9 @@ public class PersistentData : MonoBehaviour
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
 
-    public void ResetGameSave()
+    public void LoadHighScores()
     {
-        File.Delete(Application.persistentDataPath + "/savefile.json");
+        SceneManager.LoadScene(3);
     }
 
     public void LoadGame()
@@ -94,5 +97,10 @@ public class PersistentData : MonoBehaviour
             highScore = data.highScore;
             highScoreName = data.playerName;
         }
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

@@ -81,8 +81,4 @@ public class MainManager : MonoBehaviour
         Debug.Log("Reloading Scene");
     }
 
-    public void GoToMenu()
-    {
-        SceneManager.LoadScene(0);
-    }
 }
